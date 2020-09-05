@@ -1,31 +1,62 @@
-import Head from 'next/head'
-import Header from '@components/Header'
-import Footer from '@components/Footer'
+import Head from "next/head";
+import Header from "@components/Header";
+import Footer from "@components/Footer";
+import LaunchCard from "@components/LaunchCard";
+import Filter from "@components/Filter";
+import { useState, useEffect, useMemo } from "react";
+import Constants from "../constants.json";
+import "semantic-ui-css/semantic.min.css";
 
-export default function Home() {
+const Home = () => {
+  const [launchData, setLaunchData] = useState([]);
+  console.log({ Constants });
+
+  useEffect(() => {
+    fetch(Constants.APIendpoint)
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setLaunchData(data);
+      })
+      .catch((er) => {
+        console.log({ er });
+      });
+  }, []);
+
+  console.log({ launchData });
   return (
     <div className="container">
       <Head>
-        <title>Next Starter!</title>
+        <title>SpaceX Launch Programs!</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <Header />
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-      </main>
+      <Header />
+
+      <div className="main-page">
+        <Filter className="filter" />
+
+        <div className="launch-items">
+          <LaunchCard launchData={launchData} />
+        </div>
+      </div>
 
       <Footer />
 
       <style jsx>{`
         .container {
-          height: 100vh;
+          background: #e7e7e7f2;
+          padding: 20px;
+        }
+        .main-page {
+          padding: 10px;
+        }
+
+        .launch-items {
           display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+          flex-wrap: wrap;
+          margin-left: 30vh;
         }
 
         main {
@@ -35,13 +66,6 @@ export default function Home() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-family: Menlo, Monaco, Lucida Console, Courier New, monospace;
         }
       `}</style>
 
@@ -60,5 +84,7 @@ export default function Home() {
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
+
+export default Home;

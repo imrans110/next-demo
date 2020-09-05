@@ -9,8 +9,16 @@
     "export": "next export"
   },
   "dependencies": {
+    "@zeit/next-css": "^1.0.1",
     "next": "9.5.0",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^1.2.1"
+  },
+  "devDependencies": {
+    "css-loader": "^4.2.2",
+    "file-loader": "^6.1.0",
+    "url-loader": "^4.1.0"
   }
 }
