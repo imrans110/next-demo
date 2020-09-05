@@ -4,27 +4,46 @@ import Footer from "@components/Footer";
 import LaunchCard from "@components/LaunchCard";
 import Filter from "@components/Filter";
 import { useState, useEffect, useMemo } from "react";
+import { Dimmer, Loader, Image, Segment } from "semantic-ui-react";
+
+import { useRouter } from "next/router";
 import Constants from "../constants.json";
 import "semantic-ui-css/semantic.min.css";
 
+const CustomLoader = () => (
+  <Segment>
+    <Dimmer active inverted>
+      <Loader size="large">Loading</Loader>
+    </Dimmer>
+
+    <Image src="/paragraph.png" />
+  </Segment>
+);
+
 const Home = () => {
   const [launchData, setLaunchData] = useState([]);
-  console.log({ Constants });
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
+  console.log({ router });
 
   useEffect(() => {
-    fetch(Constants.APIendpoint)
+    const queryString = `?${new URLSearchParams(router.query).toString()}`;
+    setLoading(true);
+    fetch(Constants.APIendpoint + queryString)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
         setLaunchData(data);
+        setLoading(false);
       })
       .catch((er) => {
+        setLoading(false);
         console.log({ er });
       });
-  }, []);
+  }, [router.query]);
 
-  console.log({ launchData });
   return (
     <div className="container">
       <Head>
@@ -37,9 +56,13 @@ const Home = () => {
       <div className="main-page">
         <Filter className="filter" />
 
-        <div className="launch-items">
-          <LaunchCard launchData={launchData} />
-        </div>
+        {loading ? (
+          <CustomLoader className="launch-items" />
+        ) : (
+          <div className="launch-items">
+            <LaunchCard launchData={launchData} />
+          </div>
+        )}
       </div>
 
       <Footer />
@@ -57,6 +80,7 @@ const Home = () => {
           display: flex;
           flex-wrap: wrap;
           margin-left: 30vh;
+          justify-content: space-evenly;
         }
 
         main {
