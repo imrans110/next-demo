@@ -1,13 +1,15 @@
 export const removeEmptyKeys = (queryObject) => {
-  for (const objectKey of Object.keys(queryObject)) {
+  let copiedObject = { ...queryObject };
+
+  for (const objectKey of Object.keys(copiedObject)) {
     if (
-      queryObject[objectKey] === null ||
-      queryObject[objectKey] === "" ||
-      queryObject[objectKey] === "null" ||
-      queryObject[objectKey] === undefined
+      copiedObject[objectKey] === null ||
+      copiedObject[objectKey] === "" ||
+      copiedObject[objectKey] === "null" ||
+      copiedObject[objectKey] === undefined
     ) {
-      delete queryObject[objectKey];
+      delete copiedObject[objectKey];
     }
   }
-  return queryObject;
+  return copiedObject;
 };

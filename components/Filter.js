@@ -30,22 +30,22 @@ const renderLaunchYearButtons = (years, setFilter, filter) => {
 const Filter = () => {
   const router = useRouter();
   const { launch_success, land_success, launch_year } = router.query;
-  console.log({ launch_success, land_success, launch_year });
   const [filter, setFilter] = useState({
-    launch_success: launch_success || null,
-    land_success: land_success || null,
-    launch_year: launch_year || null,
+    launch_success: launch_success,
+    land_success: land_success,
+    launch_year: launch_year,
     limit: 100,
   });
 
-  console.log({ filter });
+  console.log({ filter, router });
 
   useEffect(() => {
     const query = removeEmptyKeys(filter);
-    const queryString = new URLSearchParams(query).toString();
-    console.log({ queryString: queryString });
+    if (Object.keys(query).length > 1) {
+      const queryString = new URLSearchParams(query).toString();
 
-    router.push("?" + queryString);
+      router.push("?" + queryString);
+    }
   }, [filter]);
 
   const handleChange = (filterKey, value) => {
@@ -71,13 +71,15 @@ const Filter = () => {
       </Header>
       <div className="launch-btns">
         <Button
-          onClick={() => handleChange("launch_success", true)}
+          active={filter.launch_success == "true"}
+          onClick={() => handleChange("launch_success", "true")}
           style={{ margin: "2px" }}
         >
           True
         </Button>
         <Button
-          onClick={() => handleChange("launch_success", false)}
+          active={filter.launch_success == "false"}
+          onClick={() => handleChange("launch_success", "false")}
           style={{ margin: "2px" }}
         >
           False
@@ -89,15 +91,15 @@ const Filter = () => {
       </Header>
       <div className="launch-btns">
         <Button
-          active={filter.land_success == true}
-          onClick={() => handleChange("land_success", true)}
+          active={filter.land_success == "true"}
+          onClick={() => handleChange("land_success", "true")}
           style={{ margin: "2px" }}
         >
           True
         </Button>
         <Button
-          active={filter.land_success == false}
-          onClick={() => handleChange("land_success", false)}
+          active={filter.land_success == "false"}
+          onClick={() => handleChange("land_success", "false")}
           style={{ margin: "2px" }}
         >
           False

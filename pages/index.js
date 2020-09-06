@@ -25,7 +25,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  console.log({ router });
+  const { launch_success, land_success, launch_year } = router.query;
 
   useEffect(() => {
     const queryString = `?${new URLSearchParams(router.query).toString()}`;
@@ -54,7 +54,12 @@ const Home = () => {
       <Header />
 
       <div className="main-page">
-        <Filter className="filter" />
+        <Filter
+          launch_success={launch_success}
+          land_success={land_success}
+          launch_year={launch_year}
+          className="filter"
+        />
 
         {loading ? (
           <CustomLoader className="launch-items" />
