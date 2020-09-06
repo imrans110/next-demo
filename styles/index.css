@@ -1,0 +1,25 @@
+.filter-container {
+  margin: 10px;
+  max-width: 300px !important;
+}
+
+.styled-column {
+  padding: 1rem 2rem !important;
+}
+
+.desktop-view {
+  display: grid;
+  grid-template-columns: 25% 75%;
+}
+
+.filter-button {
+  margin: 2px !important;
+}
+
+.filter-button:hover {
+  background-color: #198332 !important;
+}
+
+.filter-button.active {
+  background-color: #198332 !important;
+}

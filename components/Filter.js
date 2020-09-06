@@ -1,7 +1,13 @@
-import { Header, Button } from "semantic-ui-react";
-import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import Constants from "../constants.json";
+import {
+  Header,
+  Button,
+  Container,
+  Segment,
+  Grid,
+  Item,
+} from "semantic-ui-react";
+import { useRouter } from "next/router";
 import { removeEmptyKeys } from "../utils/index.js";
 
 const LaunchYears = [2006, 2020];
@@ -11,7 +17,10 @@ const renderLaunchYearButtons = (years, setFilter, filter) => {
   for (let i = years[0]; i <= years[1]; i++) {
     LaunchButtons.push(
       <Button
-        active={filter.launch_year == i}
+        className={
+          filter.launch_year == i ? "filter-button active" : "filter-button"
+        }
+        color="green"
         onClick={() =>
           setFilter((prevState) => {
             return { ...prevState, launch_year: JSON.stringify(i) };
@@ -24,7 +33,14 @@ const renderLaunchYearButtons = (years, setFilter, filter) => {
       </Button>
     );
   }
-  return LaunchButtons;
+  // {LaunchButtons}
+  return (
+    <Grid columns={2}>
+      {LaunchButtons.map((item) => (
+        <Grid.Column className="styled-column">{item}</Grid.Column>
+      ))}
+    </Grid>
+  );
 };
 
 const Filter = () => {
@@ -41,11 +57,9 @@ const Filter = () => {
 
   useEffect(() => {
     const query = removeEmptyKeys(filter);
-    if (Object.keys(query).length > 1) {
-      const queryString = new URLSearchParams(query).toString();
+    const queryString = new URLSearchParams(query).toString();
 
-      router.push("?" + queryString);
-    }
+    router.push("?" + queryString);
   }, [filter]);
 
   const handleChange = (filterKey, value) => {
@@ -55,86 +69,82 @@ const Filter = () => {
   };
 
   return (
-    <div className="filter-card">
-      <Header as="h3">Filters</Header>
+    <div className="filter-container">
+      <Segment raised>
+        <Header as="h3">Filters</Header>
 
-      <Header as="h4" dividing>
-        <span className="filter-title">Launch Year</span>
-      </Header>
+        <Header as="h4" dividing>
+          <span className="filter-title">Launch Year</span>
+        </Header>
 
-      <div className="launch-btns">
-        {renderLaunchYearButtons(LaunchYears, setFilter, filter)}
-      </div>
+        <div className="launch-btns">
+          {renderLaunchYearButtons(LaunchYears, setFilter, filter)}
+        </div>
 
-      <Header as="h4" dividing>
-        <span className="filter-title">Successful Launch</span>
-      </Header>
-      <div className="launch-btns">
-        <Button
-          active={filter.launch_success == "true"}
-          onClick={() => handleChange("launch_success", "true")}
-          style={{ margin: "2px" }}
-        >
-          True
-        </Button>
-        <Button
-          active={filter.launch_success == "false"}
-          onClick={() => handleChange("launch_success", "false")}
-          style={{ margin: "2px" }}
-        >
-          False
-        </Button>
-      </div>
+        <Header as="h4" dividing>
+          <span className="filter-title">Successful Launch</span>
+        </Header>
+        <Grid columns={2}>
+          <Grid.Column className="styled-column">
+            <Button
+              color="green"
+              className={
+                filter.launch_success == "true"
+                  ? "filter-button active"
+                  : "filter-button"
+              }
+              onClick={() => handleChange("launch_success", "true")}
+            >
+              True
+            </Button>
+          </Grid.Column>
+          <Grid.Column className="styled-column">
+            <Button
+              color="green"
+              className={
+                filter.launch_success == "false"
+                  ? "filter-button active"
+                  : "filter-button"
+              }
+              onClick={() => handleChange("launch_success", "false")}
+            >
+              False
+            </Button>
+          </Grid.Column>
+        </Grid>
 
-      <Header as="h4" dividing>
-        <span className="filter-title">Successful Landing</span>
-      </Header>
-      <div className="launch-btns">
-        <Button
-          active={filter.land_success == "true"}
-          onClick={() => handleChange("land_success", "true")}
-          style={{ margin: "2px" }}
-        >
-          True
-        </Button>
-        <Button
-          active={filter.land_success == "false"}
-          onClick={() => handleChange("land_success", "false")}
-          style={{ margin: "2px" }}
-        >
-          False
-        </Button>
-      </div>
-
-      <style jsx>{`
-        .filter-card {
-          padding: 0.5rem;
-          margin: 0.5rem;
-          min-height: 30vh;
-          display: inline-block;
-          height: 89%;
-          width: 30vh;
-          position: fixed;
-          z-index: 1;
-          top: 60px;
-          left: 0;
-          overflow-x: hidden;
-          padding-top: 20px;
-          background-color: white;
-          border-radius: 5px;
-        }
-
-        .filter-title {
-          display: flex;
-          justify-content: center;
-        }
-
-        .launch-btns {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-        }
-      `}</style>
+        <Header as="h4" dividing>
+          <span>Successful Landing</span>
+        </Header>
+        <Grid columns={2}>
+          <Grid.Column className="styled-column">
+            <Button
+              className={
+                filter.land_success == "true"
+                  ? "filter-button active"
+                  : "filter-button"
+              }
+              color="green"
+              onClick={() => handleChange("land_success", "true")}
+            >
+              True
+            </Button>
+          </Grid.Column>
+          <Grid.Column className="styled-column">
+            <Button
+              color="green"
+              className={
+                filter.land_success == "false"
+                  ? "filter-button active"
+                  : "filter-button"
+              }
+              onClick={() => handleChange("land_success", "false")}
+            >
+              False
+            </Button>
+          </Grid.Column>
+        </Grid>
+      </Segment>
     </div>
   );
 };

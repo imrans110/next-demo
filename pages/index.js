@@ -1,14 +1,19 @@
+import "../styles/index.css";
+
 import Head from "next/head";
+import { useRouter } from "next/router";
+
+import { useState, useEffect } from "react";
+import { Dimmer, Loader, Image, Segment, Container } from "semantic-ui-react";
+import "semantic-ui-css/semantic.min.css";
+
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import LaunchCard from "@components/LaunchCard";
 import Filter from "@components/Filter";
-import { useState, useEffect, useMemo } from "react";
-import { Dimmer, Loader, Image, Segment } from "semantic-ui-react";
 
-import { useRouter } from "next/router";
 import Constants from "../constants.json";
-import "semantic-ui-css/semantic.min.css";
+import { DesktopContainer, MobileContainer } from "@components/Containers";
 
 const CustomLoader = () => (
   <Segment>
@@ -20,12 +25,19 @@ const CustomLoader = () => (
   </Segment>
 );
 
+const ResponsiveContainer = ({ children }) => (
+  <React.Fragment>
+    <DesktopContainer>{children}</DesktopContainer>
+
+    <MobileContainer>{children}</MobileContainer>
+  </React.Fragment>
+);
+
 const Home = () => {
   const [launchData, setLaunchData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  const { launch_success, land_success, launch_year } = router.query;
 
   useEffect(() => {
     const queryString = `?${new URLSearchParams(router.query).toString()}`;
@@ -53,22 +65,23 @@ const Home = () => {
 
       <Header />
 
-      <div className="main-page">
-        <Filter
-          launch_success={launch_success}
-          land_success={land_success}
-          launch_year={launch_year}
-          className="filter"
-        />
+      <ResponsiveContainer>
+        <Filter />
+        <LaunchCard launchData={launchData} />
+      </ResponsiveContainer>
+
+      {/* 
+      <Container>
+        <Filter className="filter" />
 
         {loading ? (
           <CustomLoader className="launch-items" />
         ) : (
-          <div className="launch-items">
+          <Container className="launch-items">
             <LaunchCard launchData={launchData} />
-          </div>
+          </Container>
         )}
-      </div>
+      </Container> */}
 
       <Footer />
 
